@@ -1,0 +1,615 @@
+@startuml Python Multithreading - Comprehensive UML Diagram
+
+' Title and Configuration
+title Python Multithreading - Complete UML Class Diagram\nSingle Source of Truth for Students
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 11
+skinparam packageStyle rectangle
+skinparam backgroundColor #F8F9FA
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    ArrowColor Black
+}
+
+' ============================================
+' THREAD LIFECYCLE STATE DIAGRAM
+' ============================================
+package "Thread Lifecycle States" #E8F4F8 {
+    state "Thread Lifecycle" as TL {
+        [*] --> Created : Thread object instantiated
+        Created --> Started : start() called
+        Started --> Running : Python scheduler activates
+        Running --> Blocked : wait() / join() / acquire()
+        Blocked --> Running : notify() / release()
+        Running --> Completed : run() method exits
+        Completed --> [*] : Thread terminated
+
+        note right of Created
+            <i>Thread created but not started</i>
+            <b>Example:</b>
+            t = Thread(target=func)
+        end note
+
+        note right of Running
+            <i>Thread executing its run() method</i>
+            Main thread and child threads
+            can run concurrently
+        end note
+    }
+}
+
+' ============================================
+' CORE THREAD CLASS
+' ============================================
+package "Threading Module" #D4EDDA {
+    class Thread {
+        ' Properties
+        - name: str
+        - ident: int (read-only)
+        - daemon: bool
+        - _target: callable
+        - _args: tuple
+        - _kwargs: dict
+
+        ' Constructor
+        + __init__(group=None, target=None, name=None, args=(), kwargs={}, daemon=None)
+
+        ' Essential Methods
+        + start() : None
+        + run() : None
+        + join(timeout=None) : None
+        + is_alive() : bool
+
+        ' Naming Methods
+        + getName() : str
+        + setName(name: str) : None
+
+        ' Daemon Methods
+        + isDaemon() : bool
+        + setDaemon(daemonic: bool) : None
+
+        ' Static/Global Functions
+        {static} + active_count() : int
+        {static} + enumerate() : list[Thread]
+        {static} + current_thread() : Thread
+
+        ' Examples Section
+        --
+        <i><b>Creation Method 1: Function-based</b></i>
+        t = Thread(target=my_func)
+        t.start()
+
+        <i><b>Creation Method 2: Inheritance</b></i>
+        class MyThread(Thread):
+            def run(self):
+                # custom code
+
+        <i><b>Creation Method 3: Composition</b></i>
+        class Task:
+            def execute(self): pass
+        t = Thread(target=Task().execute)
+    }
+
+    note right of Thread::start
+        <i>Begins thread execution</i>
+        <i>Can only be called once</i>
+        <i>Raises RuntimeError if called twice</i>
+
+        <b>Example:</b>
+        t = Thread(target=worker)
+        t.start()  # Thread moves to Started state
+    end note
+
+    note right of Thread::join
+        <i>Blocks calling thread until this thread terminates</i>
+        <i>Optional timeout parameter (seconds)</i>
+
+        <b>Example - Main waits for child:</b>
+        t1.start()
+        t2.start()
+        t1.join()  # Main blocks here
+        t2.join()  # Main blocks here
+        print("All threads completed")
+    end note
+
+    note right of Thread::daemon
+        <i>Daemon threads terminate when main exits</i>
+        <i>Must be set before start()</i>
+
+        <b>Example:</b>
+        t = Thread(target=bg_task, daemon=True)
+        t.start()
+        # Program exits -> daemon thread stops
+    end note
+}
+
+' ============================================
+' SYNCHRONIZATION PRIMITIVES
+' ============================================
+package "Synchronization Primitives" #F8D7DA {
+
+    ' LOCK CLASS
+    class Lock {
+        - _locked: bool
+
+        + acquire(blocking=True, timeout=-1) : bool
+        + release() : None
+        + locked() : bool
+
+        --
+        <i><b>Basic Mutex - Only 1 thread at a time</b></i>
+        <i>Cannot be acquired recursively</i>
+
+        <b>Example - Bank Account:</b>
+        lock = Lock()
+        lock.acquire()
+        try:
+            balance -= amount  # Critical section
+        finally:
+            lock.release()
+
+        <b>⚠️ Limitation:</b>
+        Recursive acquire causes deadlock!
+    }
+
+    ' RLOCK CLASS
+    class RLock {
+        - _owner: Thread
+        - _count: int
+
+        + acquire(blocking=True, timeout=-1) : bool
+        + release() : None
+
+        --
+        <i><b>Recursive Lock - Same thread can acquire multiple times</b></i>
+        <i>Relationship: a > r (acquisitions > releases temporarily)</i>
+
+        <b>Example - Recursive Function:</b>
+        rlock = RLock()
+        def recursive_func(n):
+            rlock.acquire()
+            if n > 0:
+                recursive_func(n-1)  # No deadlock!
+            rlock.release()
+
+        <b>✅ Prevents self-deadlock in recursion</b>
+    }
+
+    ' SEMAPHORE CLASS
+    class Semaphore {
+        - _value: int
+
+        + __init__(value=1)
+        + acquire(blocking=True, timeout=-1) : bool
+        + release() : None
+
+        --
+        <i><b>Resource Counter - Allows N concurrent threads</b></i>
+        <i>Relationship: a < r (acquisitions < resources)</i>
+
+        <b>Example - Connection Pool (max 3):</b>
+        sem = Semaphore(3)
+        sem.acquire()  # Decrement: 3 -> 2
+        # Use resource
+        sem.release()  # Increment: 2 -> 3
+
+        <b>Counter Mechanics:</b>
+        Initial: 3 resources available
+        After 3 acquires: 0 (next acquire blocks)
+        After 1 release: 1 (one thread unblocked)
+    }
+
+    ' BOUNDED SEMAPHORE CLASS
+    class BoundedSemaphore {
+        - _value: int
+        - _initial_value: int
+
+        + __init__(value=1)
+        + acquire(blocking=True, timeout=-1) : bool
+        + release() : None
+
+        --
+        <i><b>Strict Semaphore - Prevents over-releasing</b></i>
+        <i>Relationship: a = r (acquisitions = resources strictly)</i>
+
+        <b>Example - Parking Lot:</b>
+        parking = BoundedSemaphore(5)
+        parking.acquire()  # Car parks
+        parking.release()  # Car leaves
+        # parking.release()  # ValueError! No car to leave
+
+        <b>⚠️ Raises ValueError if release() exceeds initial value</b>
+    }
+
+    ' Relationships between synchronization primitives
+    Lock <|-- RLock : extends with recursion
+    Semaphore <|-- BoundedSemaphore : adds bounds checking
+}
+
+note bottom of Lock
+    <b>Lock vs RLock Comparison:</b>
+
+    <b>Lock:</b> Single acquisition only
+    lock.acquire()
+    lock.acquire()  # ❌ DEADLOCK!
+
+    <b>RLock:</b> Multiple acquisitions OK
+    rlock.acquire()
+    rlock.acquire()  # ✅ No problem!
+    rlock.release()
+    rlock.release()
+end note
+
+note bottom of Semaphore
+    <b>Semaphore Relationships:</b>
+
+    <b>a > r</b> (RLock)
+    Acquisitions can temporarily exceed releases
+    (same thread, recursive calls)
+
+    <b>a < r</b> (Semaphore)
+    Acquisitions limited by available resources
+    (blocks when counter reaches 0)
+
+    <b>a = r</b> (BoundedSemaphore)
+    Acquisitions must equal releases strictly
+    (prevents programming errors)
+end note
+
+' ============================================
+' INTER-THREAD COMMUNICATION
+' ============================================
+package "Inter-Thread Communication" #D1ECF1 {
+
+    ' EVENT CLASS
+    class Event {
+        - _flag: bool
+
+        + set() : None
+        + clear() : None
+        + wait(timeout=None) : bool
+        + is_set() : bool
+        + isSet() : bool
+
+        --
+        <i><b>Simple Boolean Flag for Signaling</b></i>
+        <i>Think: Traffic Light (🟢 Green / 🔴 Red)</i>
+
+        <b>Example - Traffic Signal:</b>
+        event = Event()  # Initially False (🔴)
+
+        # Controller thread:
+        time.sleep(3)
+        event.set()  # Green light! (🟢)
+
+        # Car threads:
+        event.wait()  # Block until green
+        print("Crossing!")
+
+        <b>set():</b> Flag = True (all waiters awakened)
+        <b>clear():</b> Flag = False (waiters block)
+        <b>wait():</b> Block until flag = True
+        <b>is_set():</b> Check flag status
+    }
+
+    ' CONDITION CLASS
+    class Condition {
+        - _lock: RLock
+        - _waiters: list
+
+        + __init__(lock=None)
+        + acquire(*args) : None
+        + release() : None
+        + wait(timeout=None) : bool
+        + notify(n=1) : None
+        + notify_all() : None
+        + notifyAll() : None
+
+        --
+        <i><b>Advanced Event - Supports Complex Wait/Notify</b></i>
+        <i>Internally uses RLock for synchronization</i>
+
+        <b>Example - Producer-Consumer:</b>
+        cond = Condition()
+        buffer = []
+
+        # Producer:
+        cond.acquire()
+        while len(buffer) >= MAX:
+            cond.wait()  # Buffer full
+        buffer.append(item)
+        cond.notify()  # Wake consumer
+        cond.release()
+
+        # Consumer:
+        cond.acquire()
+        while len(buffer) == 0:
+            cond.wait()  # Buffer empty
+        item = buffer.pop(0)
+        cond.notify()  # Wake producer
+        cond.release()
+
+        <b>notify(1):</b> Wake 1 waiting thread
+        <b>notify_all():</b> Wake ALL waiting threads
+    }
+
+    ' QUEUE MODULE
+    package "Queue Module (import queue)" #E7E7FF {
+        abstract class QueueBase {
+            # maxsize: int
+            # _queue: deque
+
+            + put(item, block=True, timeout=None) : None
+            + get(block=True, timeout=None) : Any
+            + empty() : bool
+            + full() : bool
+            + qsize() : int
+            + task_done() : None
+            + join() : None
+
+            --
+            <i><b>Thread-Safe Data Exchange</b></i>
+            <i>Internally uses Lock + Condition</i>
+        }
+
+        class Queue {
+            + __init__(maxsize=0)
+            --
+            <i><b>FIFO Queue (First In, First Out)</b></i>
+
+            <b>Example - Task Distribution:</b>
+            q = queue.Queue()
+
+            # Producer:
+            q.put("Task-1")
+            q.put("Task-2")
+            q.put("Task-3")
+
+            # Consumer:
+            task = q.get()  # Gets "Task-1" (FIFO)
+
+            <b>Use Case:</b> Job queues, message passing
+        }
+
+        class LifoQueue {
+            + __init__(maxsize=0)
+            --
+            <i><b>LIFO Queue (Last In, First Out) - Stack</b></i>
+
+            <b>Example - Stack Operations:</b>
+            stack = queue.LifoQueue()
+
+            # Push:
+            stack.put("First")
+            stack.put("Second")
+            stack.put("Third")
+
+            # Pop:
+            item = stack.get()  # Gets "Third" (LIFO)
+
+            <b>Use Case:</b> Undo operations, backtracking
+        }
+
+        class PriorityQueue {
+            + __init__(maxsize=0)
+            --
+            <i><b>Priority-Based Queue (Lowest priority first)</b></i>
+
+            <b>Example - Task Priority:</b>
+            pq = queue.PriorityQueue()
+
+            # Add tasks (priority, data):
+            pq.put((3, "Low priority"))
+            pq.put((1, "High priority"))
+            pq.put((2, "Medium priority"))
+
+            # Get:
+            p, task = pq.get()  # (1, "High priority")
+
+            <b>Use Case:</b> Task scheduling, event handling
+        }
+
+        QueueBase <|-- Queue
+        QueueBase <|-- LifoQueue
+        QueueBase <|-- PriorityQueue
+    }
+
+    ' Relationships
+    Event <.. Condition : more sophisticated version
+    Condition "1" *-- "1" RLock : uses internally
+    QueueBase "1" *-- "1" Lock : uses for synchronization
+    QueueBase "1" *-- "2" Condition : uses for blocking
+}
+
+note right of Event
+    <b>Event vs Condition:</b>
+
+    <b>Event:</b>
+    ✓ Simple binary flag (True/False)
+    ✓ set() wakes ALL waiters
+    ✓ Best for: Go/Stop signals
+
+    <b>Condition:</b>
+    ✓ Complex conditions with lock
+    ✓ notify(n) wakes n waiters
+    ✓ Best for: Producer-consumer
+end note
+
+note right of Queue
+    <b>Queue Type Comparison:</b>
+
+    <b>Queue (FIFO):</b>
+    [1, 2, 3] → get() → 1
+
+    <b>LifoQueue (LIFO):</b>
+    [1, 2, 3] → get() → 3
+
+    <b>PriorityQueue:</b>
+    [(2,A), (1,B), (3,C)] → get() → (1,B)
+
+    <b>All are thread-safe!</b>
+    No manual locking needed
+end note
+
+' ============================================
+' RELATIONSHIPS AND USAGE
+' ============================================
+Thread ..> Lock : uses for synchronization
+Thread ..> RLock : uses for recursive sync
+Thread ..> Semaphore : uses for resource control
+Thread ..> Event : uses for signaling
+Thread ..> Condition : uses for complex coordination
+Thread ..> Queue : uses for data exchange
+
+' ============================================
+' COMPREHENSIVE EXAMPLE
+' ============================================
+note as N1
+    <b>Complete Example - Producer-Consumer with Queue:</b>
+
+    import threading
+    import queue
+    import time
+
+    # Create thread-safe queue
+    task_queue = queue.Queue(maxsize=5)
+
+    def producer(name):
+        for i in range(10):
+            item = f"Item-{i}"
+            task_queue.put(item)  # Blocks if full
+            print(f"{name} produced: {item}")
+            time.sleep(0.1)
+
+    def consumer(name):
+        while True:
+            try:
+                item = task_queue.get(timeout=2)  # Blocks if empty
+                print(f"{name} consumed: {item}")
+                task_queue.task_done()
+                time.sleep(0.2)
+            except queue.Empty:
+                break
+
+    # Create threads
+    p1 = threading.Thread(target=producer, args=("Producer-1",))
+    c1 = threading.Thread(target=consumer, args=("Consumer-1",))
+    c2 = threading.Thread(target=consumer, args=("Consumer-2",))
+
+    # Start threads
+    p1.start()
+    c1.start()
+    c2.start()
+
+    # Wait for completion
+    p1.join()
+    c1.join()
+    c2.join()
+
+    print("All threads completed!")
+
+    <b>Expected Output (Interleaved):</b>
+    Producer-1 produced: Item-0
+    Consumer-1 consumed: Item-0
+    Producer-1 produced: Item-1
+    Consumer-2 consumed: Item-1
+    Producer-1 produced: Item-2
+    Consumer-1 consumed: Item-2
+    ...
+end note
+
+' ============================================
+' METHOD SUMMARY TABLE
+' ============================================
+note as MethodSummary
+    <b>Quick Reference - All Methods:</b>
+
+    <b>Thread Methods:</b>
+    • start() - Begin execution
+    • run() - Override for custom behavior
+    • join(timeout) - Wait for completion
+    • is_alive() - Check if running
+    • getName() / setName() - Thread naming
+    • ident - Thread ID (read-only)
+    • daemon / setDaemon() - Background thread
+
+    <b>Global Functions:</b>
+    • active_count() - Count active threads
+    • enumerate() - List all threads
+    • current_thread() - Get current thread
+
+    <b>Lock Methods:</b>
+    • acquire() - Acquire lock
+    • release() - Release lock
+    • locked() - Check if locked
+
+    <b>RLock Methods:</b>
+    • Same as Lock (but recursive)
+
+    <b>Semaphore Methods:</b>
+    • acquire() - Decrement counter
+    • release() - Increment counter
+
+    <b>Event Methods:</b>
+    • set() - Flag = True (GREEN)
+    • clear() - Flag = False (RED)
+    • wait() - Block until set
+    • is_set() - Check flag
+
+    <b>Condition Methods:</b>
+    • acquire() / release() - Lock management
+    • wait() - Release lock and wait
+    • notify(n) - Wake n threads
+    • notify_all() - Wake all threads
+
+    <b>Queue Methods:</b>
+    • put(item) - Add to queue
+    • get() - Remove from queue
+    • empty() - Check if empty
+    • qsize() - Get size
+end note
+
+' ============================================
+' COMMON PITFALLS
+' ============================================
+note as Pitfalls
+    <b>⚠️ Common Pitfalls to Avoid:</b>
+
+    <b>1. Deadlock:</b>
+    ❌ lock.acquire()
+       lock.acquire()  # DEADLOCK!
+    ✅ Use RLock for recursive scenarios
+
+    <b>2. Forgetting to Release:</b>
+    ❌ lock.acquire()
+       # ... no release ...
+    ✅ Always use try-finally:
+       try:
+           # work
+       finally:
+           lock.release()
+
+    <b>3. Daemon Thread Data Loss:</b>
+    ❌ Daemon threads exit abruptly
+       (files may not close, data lost)
+    ✅ Use join() or non-daemon threads
+       for important I/O operations
+
+    <b>4. Race Conditions:</b>
+    ❌ if not lock.locked():
+           lock.acquire()  # Race condition!
+    ✅ Just call acquire() - it handles checking
+
+    <b>5. Queue empty()/full() Race:</b>
+    ❌ if not q.empty():
+           item = q.get()  # Race condition!
+    ✅ Use blocking get():
+       item = q.get(timeout=1)
+end note
+
+' Footer
+center footer <b>Python Multithreading UML Diagram</b> - Single Source of Truth for Students\n<i>Covers all methods, examples, and relationships</i>
+
+@enduml
