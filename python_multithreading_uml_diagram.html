@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Multithreading - Comprehensive UML Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            border-left: 5px solid #3498db;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .subsection-title {
+            font-size: 1.4em;
+            color: #34495e;
+            margin: 20px 0 10px 0;
+            font-weight: bold;
+        }
+
+        .definition {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+            padding-left: 15px;
+            border-left: 3px solid #95a5a6;
+        }
+
+        .code-box {
+            border: 2px dashed #3498db;
+            background: #f0f8ff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .code-box pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .code-title {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .method-box {
+            background: white;
+            border: 2px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .method-signature {
+            background: #2980b9;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .thread-lifecycle {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .thread-column {
+            flex: 1;
+            margin: 0 15px;
+            position: relative;
+        }
+
+        .thread-header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #2c3e50;
+            padding: 10px;
+            background: #3498db;
+            color: white;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .thread-line {
+            width: 4px;
+            background: linear-gradient(to bottom, #3498db, #2ecc71);
+            margin: 0 auto;
+            height: 400px;
+            position: relative;
+        }
+
+        .thread-state {
+            position: absolute;
+            left: 15px;
+            background: white;
+            padding: 8px 15px;
+            border: 2px solid #3498db;
+            border-radius: 20px;
+            font-weight: bold;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .state-created { top: 0; background: #e8f4f8; }
+        .state-started { top: 80px; background: #d4edda; }
+        .state-running { top: 160px; background: #fff3cd; }
+        .state-completed { top: 280px; background: #f8d7da; }
+        .state-done { top: 360px; background: #d1ecf1; }
+
+        .sync-primitive {
+            background: white;
+            border: 3px solid #e74c3c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .lock-color { border-color: #e74c3c; }
+        .rlock-color { border-color: #e67e22; }
+        .semaphore-color { border-color: #f39c12; }
+        .bounded-semaphore-color { border-color: #d35400; }
+
+        .communication-box {
+            background: white;
+            border: 3px solid #27ae60;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .event-color { border-color: #27ae60; }
+        .condition-color { border-color: #16a085; }
+        .queue-color { border-color: #8e44ad; }
+
+        .relationship-box {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            border: 2px solid #34495e;
+            border-radius: 8px;
+            background: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .output-example {
+            background: #2c3e50;
+            color: #2ecc71;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            border-left: 5px solid #27ae60;
+        }
+
+        .output-title {
+            color: #3498db;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .note {
+            background: #d1ecf1;
+            border-left: 5px solid #0c5460;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #0c5460;
+            margin-bottom: 5px;
+        }
+
+        .arrow {
+            font-size: 1.5em;
+            color: #3498db;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧵 Python Multithreading - Comprehensive UML Diagram</h1>
+        <p class="subtitle">Single Source of Truth for Understanding Python Threading</p>
+
+        <!-- ============================================ -->
+        <!-- SECTION 1: INTRODUCTION -->
+        <!-- ============================================ -->
+        <div class="section">
+            <div class="section-title">📚 1. Introduction to Multithreading</div>
+
+            <div class="definition">
+                <strong>Multitasking:</strong> Executing multiple tasks simultaneously to maximize CPU utilization and reduce idle time.
+            </div>
+
+            <div class="subsection-title">Types of Multitasking:</div>
+
+            <div class="method-box">
+                <div class="method-signature">1. Process-Based Multitasking</div>
+                <div class="definition">
+                    Executing multiple tasks where each task is a separate independent process.
+                    Managed at the Operating System level.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example:</div>
+                    <pre># Running multiple applications simultaneously
+# Chrome Browser | MS Word | Media Player | VS Code</pre>
+                </div>
+            </div>
+
+            <div class="method-box">
+                <div class="method-signature">2. Thread-Based Multitasking</div>
+                <div class="definition">
+                    Executing multiple tasks where each task is a separate thread within the same program.
+                    Managed at the Programmatic level (by developer).
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example:</div>
+                    <pre># Within a single application:
+# Thread 1: Reading user input
+# Thread 2: Processing data
+# Thread 3: Updating GUI
+# Thread 4: Saving to database</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 2: THREAD LIFECYCLE -->
+        <!-- ============================================ -->
+        <div class="section">
+            <div class="section-title">🔄 2. Thread Lifecycle - Visual Timeline</div>
+
+            <div class="definition">
+                <strong>Thread Lifecycle:</strong> The complete journey of a thread from creation to termination, showing all states a thread passes through during its execution.
+            </div>
+
+            <div class="thread-lifecycle">
+                <div class="thread-column">
+                    <div class="thread-header">Main Thread</div>
+                    <div class="thread-line">
+                        <div class="thread-state state-created">Created ⚪</div>
+                        <div class="thread-state state-started">Started 🟢</div>
+                        <div class="thread-state state-running">Running 🟡</div>
+                        <div class="thread-state state-running" style="top: 240px;">Waiting ⏸️</div>
+                        <div class="thread-state state-completed">Completed 🔴</div>
+                        <div class="thread-state state-done">Done ✅</div>
+                    </div>
+                </div>
+
+                <div class="thread-column">
+                    <div class="thread-header">Child Thread 1</div>
+                    <div class="thread-line">
+                        <div class="thread-state state-created">Created ⚪</div>
+                        <div class="thread-state state-started">Started 🟢</div>
+                        <div class="thread-state state-running">Running 🟡</div>
+                        <div class="thread-state state-completed">Completed 🔴</div>
+                        <div class="thread-state state-done">Done ✅</div>
+                    </div>
+                </div>
+
+                <div class="thread-column">
+                    <div class="thread-header">Child Thread 2</div>
+                    <div class="thread-line">
+                        <div class="thread-state state-created">Created ⚪</div>
+                        <div class="thread-state state-started">Started 🟢</div>
+                        <div class="thread-state state-running">Running 🟡</div>
+                        <div class="thread-state state-completed">Completed 🔴</div>
+                        <div class="thread-state state-done">Done ✅</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="note">
+                <div class="note-title">📌 Key Points:</div>
+                • Main thread starts automatically when program begins<br>
+                • Child threads must be explicitly created and started<br>
+                • Output from multiple threads can be interleaved<br>
+                • Main thread typically waits for child threads to complete using join()
+            </div>
+
+            <div class="code-box">
+                <div class="code-title">Complete Lifecycle Example:</div>
+                <pre>import threading
+import time
+
+def child_task(name):
+    print(f"{name}: Started")
+    for i in range(3):
+        print(f"{name}: Running - {i}")
+        time.sleep(0.5)
+    print(f"{name}: Completed")
+
+# Main thread creates child threads
+print("Main: Creating threads")
+t1 = threading.Thread(target=child_task, args=("Thread-1",))
+t2 = threading.Thread(target=child_task, args=("Thread-2",))
+
+# Start child threads
+print("Main: Starting threads")
+t1.start()  # Thread-1 moves to Started state
+t2.start()  # Thread-2 moves to Started state
+
+# Main thread continues
+print("Main: Running while children execute")
+
+# Wait for children to complete
+t1.join()  # Main waits for Thread-1
+t2.join()  # Main waits for Thread-2
+
+print("Main: All threads completed - Done")</pre>
+            </div>
+
+            <div class="output-example">
+                <div class="output-title">Mixed Output (Interleaved):</div>
+                <pre>Main: Creating threads
+Main: Starting threads
+Thread-1: Started
+Thread-2: Started
+Main: Running while children execute
+Thread-1: Running - 0
+Thread-2: Running - 0
+Thread-1: Running - 1
+Thread-2: Running - 1
+Thread-1: Running - 2
+Thread-2: Running - 2
+Thread-1: Completed
+Thread-2: Completed
+Main: All threads completed - Done</pre>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 3: THREAD CLASS & METHODS -->
+        <!-- ============================================ -->
+        <div class="section">
+            <div class="section-title">🧩 3. Thread Class & Methods</div>
+
+            <div class="definition">
+                <strong>threading.Thread:</strong> The fundamental class for creating and managing threads in Python. Import using: <span class="highlight">import threading</span>
+            </div>
+
+            <div class="subsection-title">3.1 Thread Creation Methods:</div>
+
+            <div class="method-box">
+                <div class="method-signature">Method 1: Without using any class (Function-based)</div>
+                <div class="definition">
+                    Create a thread by passing a target function to Thread constructor.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - Function-based Thread:</div>
+                    <pre>import threading
+
+def display_numbers():
+    for i in range(1, 6):
+        print(f"Number: {i}")
+
+# Create thread with target function
+t = threading.Thread(target=display_numbers)
+t.start()  # Start execution</pre>
+                </div>
+            </div>
+
+            <div class="method-box">
+                <div class="method-signature">Method 2: By extending Thread class (Inheritance)</div>
+                <div class="definition">
+                    Create a custom thread class by inheriting from threading.Thread and overriding run() method.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - Class-based Thread (Inheritance):</div>
+                    <pre>import threading
+
+class MyThread(threading.Thread):
+    def run(self):
+        # Override run() method
+        for i in range(1, 6):
+            print(f"{self.name}: Number {i}")
+
+# Create and start thread
+t = MyThread()
+t.start()</pre>
+                </div>
+            </div>
+
+            <div class="method-box">
+                <div class="method-signature">Method 3: Without extending Thread class (Composition)</div>
+                <div class="definition">
+                    Create a custom class with a method and pass that method as target to Thread.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - Custom Class Thread (Composition):</div>
+                    <pre>import threading
+
+class MyTask:
+    def execute(self):
+        for i in range(1, 6):
+            print(f"Task: Number {i}")
+
+# Create custom object and pass its method
+task = MyTask()
+t = threading.Thread(target=task.execute)
+t.start()</pre>
+                </div>
+            </div>
+
+            <div class="subsection-title">3.2 Thread Constructor & Properties:</div>
+
+            <div class="method-box">
+                <div class="method-signature">Thread.__init__(group=None, target=None, name=None, args=(), kwargs={}, daemon=None)</div>
+                <div class="definition">
+                    <strong>Constructor:</strong> Initialize a new Thread object with specified parameters.
+                </div>
+                <table>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                    <tr>
+                        <td><strong>group</strong></td>
+                        <td>Reserved for future (always None)</td>
+                        <td>group=None</td>
+                    </tr>
+                    <tr>
+                        <td><strong>target</strong></td>
+                        <td>Function to be executed by thread</td>
+                        <td>target=my_function</td>
+                    </tr>
+                    <tr>
+                        <td><strong>name</strong></td>
+                        <td>Thread name (default: "Thread-N")</td>
+                        <td>name="Worker-1"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>args</strong></td>
+                        <td>Tuple of arguments for target function</td>
+                        <td>args=(10, 20)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>kwargs</strong></td>
+                        <td>Dictionary of keyword arguments</td>
+                        <td>kwargs={'x': 5}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>daemon</strong></td>
+                        <td>Daemon thread flag (True/False)</td>
+                        <td>daemon=True</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="subsection-title">3.3 Essential Thread Methods:</div>
+
+            <div class="method-box">
+                <div class="method-signature">start()</div>
+                <div class="definition">
+                    Start the thread's activity. This method must be called at most once per thread object.
+                    It arranges for the object's run() method to be invoked in a separate thread.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - start():</div>
+                    <pre>t = threading.Thread(target=my_function)
+t.start()  # Begin thread execution
+# Note: Calling start() twice raises RuntimeError</pre>
+                </div>
+            </div>
+
+            <div class="method-box">
+                <div class="method-signature">run()</div>
+                <div class="definition">
+                    Method representing the thread's activity. Override this method in a subclass to define thread behavior.
+                    The standard run() method invokes the target function passed to the constructor.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - run():</div>
+                    <pre>class MyThread(threading.Thread):
+    def run(self):
+        # Custom thread behavior
+        print(f"{self.name} is executing")
+
+t = MyThread()
+t.start()  # Internally calls run()</pre>
+                </div>
+            </div>
+
+            <div class="method-box">
+                <div class="method-signature">join(timeout=None)</div>
+                <div class="definition">
+                    Wait until the thread terminates. This blocks the calling thread until the thread whose join() method is called terminates.
+                    Optional timeout parameter specifies maximum wait time in seconds.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - join():</div>
+                    <pre>import threading
+import time
+
+def task():
+    time.sleep(2)
+    print("Task completed")
+
+t = threading.Thread(target=task)
+t.start()
+
+print("Waiting for thread to finish...")
+t.join()  # Main thread waits here
+print("Thread finished, continuing main thread")
+
+# With timeout
+t.join(timeout=1.0)  # Wait max 1 second</pre>
+                </div>
+            </div>
+
+            <div class="method-box">
+                <div class="method-signature">getName() / name property</div>
+                <div class="definition">
+                    Get the thread's name. The name is a string used for identification purposes only.
+                    Default name pattern: "Thread-N" where N is a sequential number.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - getName() / name:</div>
+                    <pre>t = threading.Thread(target=my_function, name="Worker-1")
+print(t.getName())  # Output: Worker-1
+print(t.name)       # Output: Worker-1 (property access)
+
+# Inside thread function
+def my_function():
+    current = threading.current_thread()
+    print(f"Running in: {current.getName()}")</pre>
+                </div>
+            </div>
+
+            <div class="method-box">
+                <div class="method-signature">setName(name) / name property</div>
+                <div class="definition">
+                    Set the thread's name. The name must be a string.
+                    Useful for debugging and logging to identify specific threads.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - setName() / name:</div>
+                    <pre>t = threading.Thread(target=my_function)
+print(t.name)  # Output: Thread-1
+
+t.setName("DatabaseWorker")
+print(t.name)  # Output: DatabaseWorker
+
+# Using property
+t.name = "FileProcessor"
+print(t.name)  # Output: FileProcessor</pre>
+                </div>
+            </div>
+
+            <div class="method-box">
+                <div class="method-signature">ident property</div>
+                <div class="definition">
+                    Thread identifier (read-only). This is a nonzero integer assigned by the system.
+                    Returns None if thread has not been started. Thread IDs may be recycled after thread termination.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - ident:</div>
+                    <pre>t = threading.Thread(target=my_function)
+print(t.ident)  # Output: None (not started yet)
+
+t.start()
+print(t.ident)  # Output: 12345 (system-assigned ID)
+
+def my_function():
+    print(f"My ID: {threading.current_thread().ident}")</pre>
+                </div>
+            </div>
+
+            <div class="method-box">
+                <div class="method-signature">daemon property / setDaemon(daemonic)</div>
+                <div class="definition">
+                    Boolean flag indicating whether thread is a daemon thread.
+                    Daemon threads automatically terminate when main program exits.
+                    Must be set before start() is called.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - daemon / setDaemon():</div>
+                    <pre># Method 1: Using property
+t = threading.Thread(target=background_task)
+t.daemon = True
+t.start()
+
+# Method 2: Using setDaemon()
+t = threading.Thread(target=background_task)
+t.setDaemon(True)
+t.start()
+
+# Method 3: Constructor parameter
+t = threading.Thread(target=background_task, daemon=True)
+t.start()
+
+# Check daemon status
+print(t.daemon)  # Output: True
+print(t.isDaemon())  # Output: True</pre>
+                </div>
+                <div class="note">
+                    <div class="note-title">📌 Daemon Thread Behavior:</div>
+                    • Main thread is always non-daemon<br>
+                    • Child threads inherit daemon status from parent<br>
+                    • Program exits when only daemon threads remain<br>
+                    • Cannot change daemon status after thread starts
+                </div>
+            </div>
+
+            <div class="method-box">
+                <div class="method-signature">is_alive()</div>
+                <div class="definition">
+                    Return whether the thread is alive (running or ready to run).
+                    Returns True from start() call until run() method terminates.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - is_alive():</div>
+                    <pre>import threading
+import time
+
+def task():
+    time.sleep(2)
+
+t = threading.Thread(target=task)
+print(t.is_alive())  # Output: False
+
+t.start()
+print(t.is_alive())  # Output: True
+
+t.join()
+print(t.is_alive())  # Output: False</pre>
+                </div>
+            </div>
+
+            <div class="subsection-title">3.4 Global Thread Functions:</div>
+
+            <div class="method-box">
+                <div class="method-signature">threading.active_count()</div>
+                <div class="definition">
+                    Return the number of Thread objects currently alive.
+                    Includes main thread and all child threads that have been started but not yet finished.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - active_count():</div>
+                    <pre>import threading
+
+def task():
+    print(f"Active threads: {threading.active_count()}")
+
+print(f"Initial: {threading.active_count()}")  # Output: 1 (main thread)
+
+t1 = threading.Thread(target=task)
+t2 = threading.Thread(target=task)
+
+t1.start()
+t2.start()
+
+print(f"After starting: {threading.active_count()}")  # Output: 3 (main + 2 children)
+
+t1.join()
+t2.join()
+
+print(f"After completion: {threading.active_count()}")  # Output: 1 (main thread)</pre>
+                </div>
+            </div>
+
+            <div class="method-box">
+                <div class="method-signature">threading.enumerate()</div>
+                <div class="definition">
+                    Return a list of all Thread objects currently alive.
+                    Includes main thread, daemon threads, and all active child threads.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - enumerate():</div>
+                    <pre>import threading
+import time
+
+def worker(name):
+    time.sleep(2)
+
+# Create multiple threads
+threads = []
+for i in range(3):
+    t = threading.Thread(target=worker, args=(f"Worker-{i}",), name=f"Thread-{i}")
+    t.start()
+    threads.append(t)
+
+# List all active threads
+print("Active threads:")
+for thread in threading.enumerate():
+    print(f"  - {thread.name} (ID: {thread.ident}, Daemon: {thread.daemon})")
+
+# Wait for completion
+for t in threads:
+    t.join()</pre>
+                </div>
+                <div class="output-example">
+                    <div class="output-title">Output:</div>
+                    <pre>Active threads:
+  - MainThread (ID: 140735268, Daemon: False)
+  - Thread-0 (ID: 123145728, Daemon: False)
+  - Thread-1 (ID: 123149824, Daemon: False)
+  - Thread-2 (ID: 123153920, Daemon: False)</pre>
+                </div>
+            </div>
+
+            <div class="method-box">
+                <div class="method-signature">threading.current_thread()</div>
+                <div class="definition">
+                    Return the current Thread object, corresponding to the caller's thread of control.
+                    Useful for accessing thread properties from within thread function.
+                </div>
+                <div class="code-box">
+                    <div class="code-title">Example - current_thread():</div>
+                    <pre>import threading
+
+def identify_thread():
+    current = threading.current_thread()
+    print(f"Name: {current.name}")
+    print(f"ID: {current.ident}")
+    print(f"Daemon: {current.daemon}")
+
+t = threading.Thread(target=identify_thread, name="Worker")
+t.start()
+t.join()
+
+# From main thread
+main = threading.current_thread()
+print(f"Main thread: {main.name}")</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 4: SYNCHRONIZATION PRIMITIVES -->
+        <!-- ============================================ -->
+        <div class="section">
+            <div class="section-title">🔒 4. Synchronization Primitives</div>
+
+            <div class="definition">
+                <strong>Synchronization:</strong> Coordinating thread execution to prevent race conditions and ensure data consistency when multiple threads access shared resources.
+            </div>
+
+            <div class="note">
+                <div class="note-title">📌 Why Synchronization is Needed:</div>
+                • Multiple threads accessing shared resources simultaneously<br>
+                • Prevents data corruption and inconsistent states<br>
+                • Ensures thread-safe operations<br>
+                • Controls access to critical sections of code
+            </div>
+
+            <div class="subsection-title">4.1 Lock - Basic Mutual Exclusion:</div>
+
+            <div class="sync-primitive lock-color">
+                <div class="method-signature">threading.Lock()</div>
+                <div class="definition">
+                    <strong>Lock:</strong> A primitive lock (mutex) that provides mutual exclusion.
+                    Only one thread can acquire the lock at a time. Other threads must wait until lock is released.
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">acquire(blocking=True, timeout=-1)</div>
+                    <div class="definition">
+                        Acquire the lock. If lock is already held, block until it's released.
+                        Returns True if lock acquired successfully, False if timeout expires.
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">release()</div>
+                    <div class="definition">
+                        Release the lock. Can be called from any thread, not just the one that acquired it.
+                        Raises RuntimeError if called on unlocked lock.
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">locked() / is_locked()</div>
+                    <div class="definition">
+                        Return True if lock is currently held by any thread, False otherwise.
+                    </div>
+                </div>
+
+                <div class="code-box">
+                    <div class="code-title">Example - Bank Account with Lock:</div>
+                    <pre>import threading
+import time
+
+class BankAccount:
+    def __init__(self):
+        self.balance = 1000
+        self.lock = threading.Lock()
+
+    def withdraw(self, amount, name):
+        print(f"{name}: Attempting withdrawal of ${amount}")
+
+        self.lock.acquire()  # Acquire lock
+        print(f"{name}: Lock acquired")
+
+        try:
+            if self.balance >= amount:
+                print(f"{name}: Processing withdrawal...")
+                time.sleep(0.1)  # Simulate processing
+                self.balance -= amount
+                print(f"{name}: Withdrawal successful. Balance: ${self.balance}")
+            else:
+                print(f"{name}: Insufficient funds. Balance: ${self.balance}")
+        finally:
+            self.lock.release()  # Always release lock
+            print(f"{name}: Lock released")
+
+# Usage
+account = BankAccount()
+t1 = threading.Thread(target=account.withdraw, args=(600, "Thread-1"))
+t2 = threading.Thread(target=account.withdraw, args=(600, "Thread-2"))
+
+t1.start()
+t2.start()
+t1.join()
+t2.join()
+
+print(f"Final Balance: ${account.balance}")</pre>
+                </div>
+
+                <div class="output-example">
+                    <div class="output-title">Output (Synchronized):</div>
+                    <pre>Thread-1: Attempting withdrawal of $600
+Thread-1: Lock acquired
+Thread-2: Attempting withdrawal of $600
+Thread-1: Processing withdrawal...
+Thread-1: Withdrawal successful. Balance: $400
+Thread-1: Lock released
+Thread-2: Lock acquired
+Thread-2: Processing withdrawal...
+Thread-2: Insufficient funds. Balance: $400
+Thread-2: Lock released
+Final Balance: $400</pre>
+                </div>
+
+                <div class="note">
+                    <div class="note-title">⚠️ Lock Limitation:</div>
+                    • Lock cannot be acquired recursively by same thread<br>
+                    • Attempting recursive acquire causes deadlock<br>
+                    • Use RLock for recursive locking scenarios
+                </div>
+            </div>
+
+            <div class="subsection-title">4.2 RLock - Recursive Lock (a > r):</div>
+
+            <div class="sync-primitive rlock-color">
+                <div class="method-signature">threading.RLock()</div>
+                <div class="definition">
+                    <strong>RLock (Reentrant Lock):</strong> A lock that can be acquired multiple times by the same thread.
+                    Must be released the same number of times it was acquired. Relationship: <span class="highlight">acquisitions > releases</span> (temporarily)
+                </div>
+
+                <div class="relationship-box">a > r</div>
+                <span style="margin-left: 10px;">Acquisitions can exceed Releases (by same thread)</span>
+
+                <div class="method-box">
+                    <div class="method-signature">acquire(blocking=True, timeout=-1)</div>
+                    <div class="definition">
+                        Acquire the lock. Same thread can acquire multiple times.
+                        Internal counter increments with each acquisition.
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">release()</div>
+                    <div class="definition">
+                        Release the lock. Decrements internal counter.
+                        Lock is fully released only when counter reaches zero.
+                        Must be called by thread that acquired the lock.
+                    </div>
+                </div>
+
+                <div class="code-box">
+                    <div class="code-title">Example - Recursive Function with RLock:</div>
+                    <pre>import threading
+
+rlock = threading.RLock()
+
+def recursive_function(n, name):
+    if n <= 0:
+        return
+
+    rlock.acquire()  # Acquire lock
+    print(f"{name}: Acquired lock at level {n}")
+
+    try:
+        print(f"{name}: Processing level {n}")
+        recursive_function(n - 1, name)  # Recursive call (re-acquires lock)
+        print(f"{name}: Completed level {n}")
+    finally:
+        rlock.release()  # Release lock
+        print(f"{name}: Released lock at level {n}")
+
+# Test with RLock (works fine)
+t1 = threading.Thread(target=recursive_function, args=(3, "Thread-1"))
+t1.start()
+t1.join()
+
+print("\n--- Comparison with Regular Lock (would deadlock) ---")
+# Regular Lock would cause deadlock on recursive call!</pre>
+                </div>
+
+                <div class="output-example">
+                    <div class="output-title">Output (RLock - No Deadlock):</div>
+                    <pre>Thread-1: Acquired lock at level 3
+Thread-1: Processing level 3
+Thread-1: Acquired lock at level 2
+Thread-1: Processing level 2
+Thread-1: Acquired lock at level 1
+Thread-1: Processing level 1
+Thread-1: Completed level 1
+Thread-1: Released lock at level 1
+Thread-1: Completed level 2
+Thread-1: Released lock at level 2
+Thread-1: Completed level 3
+Thread-1: Released lock at level 3</pre>
+                </div>
+
+                <div class="code-box">
+                    <div class="code-title">Another Example - Nested Method Calls:</div>
+                    <pre>import threading
+
+class ResourceManager:
+    def __init__(self):
+        self.rlock = threading.RLock()
+        self.resource = 0
+
+    def increment(self):
+        with self.rlock:  # Acquire lock
+            self.resource += 1
+            print(f"Incremented: {self.resource}")
+
+    def increment_twice(self):
+        with self.rlock:  # Acquire lock first time
+            self.increment()  # Acquire lock second time (recursive)
+            self.increment()  # Acquire lock third time (recursive)
+            # All three acquisitions by same thread - no deadlock!
+
+manager = ResourceManager()
+manager.increment_twice()
+print(f"Final value: {manager.resource}")</pre>
+                </div>
+            </div>
+
+            <div class="subsection-title">4.3 Semaphore - Resource Counting (a < r):</div>
+
+            <div class="sync-primitive semaphore-color">
+                <div class="method-signature">threading.Semaphore(value=1)</div>
+                <div class="definition">
+                    <strong>Semaphore:</strong> Manages an internal counter representing available resources.
+                    Allows multiple threads (up to 'value') to acquire simultaneously. Relationship: <span class="highlight">acquisitions < resources</span>
+                </div>
+
+                <div class="relationship-box">a < r</div>
+                <span style="margin-left: 10px;">Acquisitions limited by Resource count</span>
+
+                <table>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Effect on Counter</th>
+                        <th>Behavior</th>
+                    </tr>
+                    <tr>
+                        <td><strong>acquire()</strong></td>
+                        <td>Decrements counter</td>
+                        <td>Blocks if counter = 0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>release()</strong></td>
+                        <td>Increments counter</td>
+                        <td>Wakes up waiting thread</td>
+                    </tr>
+                </table>
+
+                <div class="code-box">
+                    <div class="code-title">Example - Connection Pool (3 connections max):</div>
+                    <pre>import threading
+import time
+
+# Create semaphore with 3 resources
+semaphore = threading.Semaphore(3)
+
+def access_resource(thread_id):
+    print(f"Thread-{thread_id}: Waiting for resource...")
+
+    semaphore.acquire()  # Decrement counter
+    print(f"Thread-{thread_id}: Acquired resource (Counter decreased)")
+
+    try:
+        print(f"Thread-{thread_id}: Using resource...")
+        time.sleep(2)  # Simulate work
+        print(f"Thread-{thread_id}: Finished with resource")
+    finally:
+        semaphore.release()  # Increment counter
+        print(f"Thread-{thread_id}: Released resource (Counter increased)")
+
+# Create 6 threads competing for 3 resources
+threads = []
+for i in range(6):
+    t = threading.Thread(target=access_resource, args=(i,))
+    threads.append(t)
+    t.start()
+
+for t in threads:
+    t.join()</pre>
+                </div>
+
+                <div class="output-example">
+                    <div class="output-title">Output (Semaphore - Max 3 concurrent):</div>
+                    <pre>Thread-0: Waiting for resource...
+Thread-0: Acquired resource (Counter decreased)
+Thread-1: Waiting for resource...
+Thread-1: Acquired resource (Counter decreased)
+Thread-2: Waiting for resource...
+Thread-2: Acquired resource (Counter decreased)
+Thread-3: Waiting for resource...  ← BLOCKED (all 3 resources in use)
+Thread-4: Waiting for resource...  ← BLOCKED
+Thread-5: Waiting for resource...  ← BLOCKED
+Thread-0: Using resource...
+Thread-1: Using resource...
+Thread-2: Using resource...
+Thread-0: Finished with resource
+Thread-0: Released resource (Counter increased)
+Thread-3: Acquired resource (Counter decreased)  ← UNBLOCKED
+Thread-3: Using resource...
+...</pre>
+                </div>
+
+                <div class="note">
+                    <div class="note-title">📌 Semaphore Use Cases:</div>
+                    • Database connection pools<br>
+                    • Thread pools with limited workers<br>
+                    • Rate limiting (max N requests per second)<br>
+                    • Resource allocation (printers, network connections)
+                </div>
+            </div>
+
+            <div class="subsection-title">4.4 BoundedSemaphore - Strict Resource Counting (a = r):</div>
+
+            <div class="sync-primitive bounded-semaphore-color">
+                <div class="method-signature">threading.BoundedSemaphore(value=1)</div>
+                <div class="definition">
+                    <strong>BoundedSemaphore:</strong> Same as Semaphore but prevents counter from exceeding initial value.
+                    Raises ValueError if release() called too many times. Relationship: <span class="highlight">acquisitions = resources</span>
+                </div>
+
+                <div class="relationship-box">a = r</div>
+                <span style="margin-left: 10px;">Acquisitions must equal Releases (strict equality)</span>
+
+                <table>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Semaphore</th>
+                        <th>BoundedSemaphore</th>
+                    </tr>
+                    <tr>
+                        <td><strong>release() limit</strong></td>
+                        <td>No limit (can exceed initial value)</td>
+                        <td>Cannot exceed initial value</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Error on over-release</strong></td>
+                        <td>No error (silently increases)</td>
+                        <td>Raises ValueError</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Use case</strong></td>
+                        <td>Simple counting</td>
+                        <td>Strict resource management</td>
+                    </tr>
+                </table>
+
+                <div class="code-box">
+                    <div class="code-title">Example - BoundedSemaphore vs Semaphore:</div>
+                    <pre>import threading
+
+# Regular Semaphore (allows over-release)
+sem = threading.Semaphore(2)
+sem.release()  # OK - counter becomes 3
+sem.release()  # OK - counter becomes 4
+print("Semaphore: Over-release allowed")
+
+# BoundedSemaphore (prevents over-release)
+bounded_sem = threading.BoundedSemaphore(2)
+bounded_sem.acquire()  # Counter: 2 -> 1
+bounded_sem.release()  # Counter: 1 -> 2
+
+try:
+    bounded_sem.release()  # ERROR! Counter already at initial value
+except ValueError as e:
+    print(f"BoundedSemaphore: {e}")
+
+# Practical Example: Parking Lot
+class ParkingLot:
+    def __init__(self, spaces):
+        self.semaphore = threading.BoundedSemaphore(spaces)
+
+    def park(self, car_id):
+        print(f"Car {car_id}: Trying to park")
+        self.semaphore.acquire()
+        print(f"Car {car_id}: Parked successfully")
+
+    def leave(self, car_id):
+        print(f"Car {car_id}: Leaving parking lot")
+        self.semaphore.release()
+        print(f"Car {car_id}: Left parking lot")
+
+# Test
+parking = ParkingLot(2)
+parking.park(1)  # OK
+parking.park(2)  # OK
+parking.leave(1)  # OK
+parking.leave(2)  # OK
+# parking.leave(3)  # Would raise ValueError - no car to leave!</pre>
+                </div>
+            </div>
+
+            <div class="subsection-title">4.5 Synchronization Summary:</div>
+
+            <table>
+                <tr>
+                    <th>Primitive</th>
+                    <th>Relationship</th>
+                    <th>Concurrent Access</th>
+                    <th>Recursive</th>
+                    <th>Use Case</th>
+                </tr>
+                <tr>
+                    <td><strong>Lock</strong></td>
+                    <td>Binary (0 or 1)</td>
+                    <td>1 thread only</td>
+                    <td>❌ No</td>
+                    <td>Simple mutual exclusion</td>
+                </tr>
+                <tr>
+                    <td><strong>RLock</strong></td>
+                    <td>a > r (temporary)</td>
+                    <td>1 thread (multiple times)</td>
+                    <td>✅ Yes</td>
+                    <td>Recursive functions, nested calls</td>
+                </tr>
+                <tr>
+                    <td><strong>Semaphore</strong></td>
+                    <td>a < r</td>
+                    <td>N threads (N = initial value)</td>
+                    <td>N/A</td>
+                    <td>Resource pools, rate limiting</td>
+                </tr>
+                <tr>
+                    <td><strong>BoundedSemaphore</strong></td>
+                    <td>a = r (strict)</td>
+                    <td>N threads (bounded)</td>
+                    <td>N/A</td>
+                    <td>Strict resource tracking</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 5: INTER-THREAD COMMUNICATION -->
+        <!-- ============================================ -->
+        <div class="section">
+            <div class="section-title">💬 5. Inter-Thread Communication</div>
+
+            <div class="definition">
+                <strong>Inter-Thread Communication:</strong> Mechanisms allowing threads to exchange data and coordinate activities through signaling and message passing.
+            </div>
+
+            <div class="subsection-title">5.1 Event - Simple Signaling:</div>
+
+            <div class="communication-box event-color">
+                <div class="method-signature">threading.Event()</div>
+                <div class="definition">
+                    <strong>Event:</strong> A simple synchronization primitive with an internal boolean flag.
+                    One thread signals an event, other threads wait for it. Think of it as a traffic light: 🟢 (set) or 🔴 (clear).
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">set()</div>
+                    <div class="definition">
+                        Set the internal flag to True (GREEN signal).
+                        All threads waiting for this event are awakened.
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">clear()</div>
+                    <div class="definition">
+                        Reset the internal flag to False (RED signal).
+                        Threads calling wait() will block until set() is called again.
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">wait(timeout=None)</div>
+                    <div class="definition">
+                        Block until the internal flag is True.
+                        If flag is already True, return immediately.
+                        Returns True if event is set, False if timeout occurred.
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">is_set() / isSet()</div>
+                    <div class="definition">
+                        Return True if the internal flag is True, False otherwise.
+                        Non-blocking check of event status.
+                    </div>
+                </div>
+
+                <div class="code-box">
+                    <div class="code-title">Example - Traffic Signal System:</div>
+                    <pre>import threading
+import time
+
+# Create event (initially False/RED)
+traffic_signal = threading.Event()
+
+def traffic_controller():
+    print("🔴 Traffic Controller: RED light - cars must wait")
+    time.sleep(3)
+
+    print("🟢 Traffic Controller: GREEN light - cars can go!")
+    traffic_signal.set()  # Set flag to True
+    time.sleep(2)
+
+    print("🔴 Traffic Controller: RED light again")
+    traffic_signal.clear()  # Reset flag to False
+
+def car(car_id):
+    print(f"Car-{car_id}: Approaching intersection...")
+    print(f"Car-{car_id}: Waiting for GREEN light...")
+
+    traffic_signal.wait()  # Block until event is set
+
+    print(f"Car-{car_id}: ✅ GREEN light! Crossing intersection...")
+
+# Start controller
+controller = threading.Thread(target=traffic_controller)
+controller.start()
+
+# Start cars
+cars = []
+for i in range(5):
+    t = threading.Thread(target=car, args=(i,))
+    cars.append(t)
+    t.start()
+    time.sleep(0.2)
+
+# Wait for all
+controller.join()
+for t in cars:
+    t.join()</pre>
+                </div>
+
+                <div class="output-example">
+                    <div class="output-title">Output:</div>
+                    <pre>🔴 Traffic Controller: RED light - cars must wait
+Car-0: Approaching intersection...
+Car-0: Waiting for GREEN light...
+Car-1: Approaching intersection...
+Car-1: Waiting for GREEN light...
+Car-2: Approaching intersection...
+Car-2: Waiting for GREEN light...
+Car-3: Approaching intersection...
+Car-3: Waiting for GREEN light...
+Car-4: Approaching intersection...
+Car-4: Waiting for GREEN light...
+🟢 Traffic Controller: GREEN light - cars can go!
+Car-0: ✅ GREEN light! Crossing intersection...
+Car-1: ✅ GREEN light! Crossing intersection...
+Car-2: ✅ GREEN light! Crossing intersection...
+Car-3: ✅ GREEN light! Crossing intersection...
+Car-4: ✅ GREEN light! Crossing intersection...
+🔴 Traffic Controller: RED light again</pre>
+                </div>
+            </div>
+
+            <div class="subsection-title">5.2 Condition - Advanced Wait/Notify:</div>
+
+            <div class="communication-box condition-color">
+                <div class="method-signature">threading.Condition(lock=None)</div>
+                <div class="definition">
+                    <strong>Condition:</strong> A more sophisticated version of Event that allows threads to wait for specific conditions.
+                    Internally uses RLock. Supports one-to-one or one-to-many signaling.
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">acquire(*args)</div>
+                    <div class="definition">
+                        Acquire the underlying lock. Must be called before wait() or notify().
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">release()</div>
+                    <div class="definition">
+                        Release the underlying lock. Should be called after wait() or notify().
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">wait(timeout=None)</div>
+                    <div class="definition">
+                        Release the lock and wait until notified or timeout.
+                        Automatically re-acquires lock before returning.
+                        Must be called with lock held.
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">notify(n=1)</div>
+                    <div class="definition">
+                        Wake up at most n threads waiting on this condition.
+                        Default n=1 wakes up one thread. Must be called with lock held.
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">notify_all() / notifyAll()</div>
+                    <div class="definition">
+                        Wake up all threads waiting on this condition.
+                        Must be called with lock held.
+                    </div>
+                </div>
+
+                <div class="code-box">
+                    <div class="code-title">Example - Producer-Consumer Pattern:</div>
+                    <pre>import threading
+import time
+import random
+
+class SharedBuffer:
+    def __init__(self):
+        self.items = []
+        self.condition = threading.Condition()
+        self.max_size = 5
+
+    def produce(self, item, producer_name):
+        self.condition.acquire()
+
+        # Wait if buffer is full
+        while len(self.items) >= self.max_size:
+            print(f"{producer_name}: Buffer full, waiting...")
+            self.condition.wait()
+
+        # Produce item
+        self.items.append(item)
+        print(f"{producer_name}: Produced {item} | Buffer: {self.items}")
+
+        # Notify consumers
+        self.condition.notify()
+
+        self.condition.release()
+
+    def consume(self, consumer_name):
+        self.condition.acquire()
+
+        # Wait if buffer is empty
+        while len(self.items) == 0:
+            print(f"{consumer_name}: Buffer empty, waiting...")
+            self.condition.wait()
+
+        # Consume item
+        item = self.items.pop(0)
+        print(f"{consumer_name}: Consumed {item} | Buffer: {self.items}")
+
+        # Notify producers
+        self.condition.notify()
+
+        self.condition.release()
+        return item
+
+# Test
+buffer = SharedBuffer()
+
+def producer(name):
+    for i in range(5):
+        item = f"Item-{random.randint(1, 100)}"
+        buffer.produce(item, name)
+        time.sleep(random.uniform(0.1, 0.5))
+
+def consumer(name):
+    for i in range(5):
+        buffer.consume(name)
+        time.sleep(random.uniform(0.2, 0.6))
+
+# Start threads
+p1 = threading.Thread(target=producer, args=("Producer-1",))
+c1 = threading.Thread(target=consumer, args=("Consumer-1",))
+c2 = threading.Thread(target=consumer, args=("Consumer-2",))
+
+p1.start()
+c1.start()
+c2.start()
+
+p1.join()
+c1.join()
+c2.join()</pre>
+                </div>
+
+                <div class="note">
+                    <div class="note-title">📌 Condition vs Event:</div>
+                    • <strong>Event:</strong> Simple binary flag, all waiters awakened together<br>
+                    • <strong>Condition:</strong> Complex conditions, selective notification (notify vs notify_all)<br>
+                    • <strong>Event:</strong> Best for simple signaling<br>
+                    • <strong>Condition:</strong> Best for producer-consumer, resource allocation
+                </div>
+            </div>
+
+            <div class="subsection-title">5.3 Queue - Thread-Safe Data Exchange:</div>
+
+            <div class="communication-box queue-color">
+                <div class="method-signature">import queue</div>
+                <div class="definition">
+                    <strong>Queue Module:</strong> Provides thread-safe queue implementations for exchanging data between threads.
+                    Internally uses locks and conditions for synchronization. Must import: <span class="highlight">import queue</span>
+                </div>
+
+                <div class="subsection-title">5.3.1 Queue Types:</div>
+
+                <div class="method-box">
+                    <div class="method-signature">queue.Queue(maxsize=0)</div>
+                    <div class="definition">
+                        <strong>FIFO Queue:</strong> First-In-First-Out. Items retrieved in order they were added.
+                        Default behavior (like a line at a store).
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">queue.LifoQueue(maxsize=0)</div>
+                    <div class="definition">
+                        <strong>LIFO Queue (Stack):</strong> Last-In-First-Out. Most recently added item retrieved first.
+                        Stack behavior (like a stack of plates).
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">queue.PriorityQueue(maxsize=0)</div>
+                    <div class="definition">
+                        <strong>Priority Queue:</strong> Items retrieved based on priority (lowest value first).
+                        Items should be tuples: (priority, data).
+                    </div>
+                </div>
+
+                <div class="subsection-title">5.3.2 Queue Methods:</div>
+
+                <div class="method-box">
+                    <div class="method-signature">put(item, block=True, timeout=None)</div>
+                    <div class="definition">
+                        Put an item into the queue. If queue is full and block=True, wait until space available.
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">get(block=True, timeout=None)</div>
+                    <div class="definition">
+                        Remove and return an item from the queue. If queue is empty and block=True, wait until item available.
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">empty()</div>
+                    <div class="definition">
+                        Return True if queue is empty, False otherwise. Not reliable for synchronization.
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">full()</div>
+                    <div class="definition">
+                        Return True if queue is full, False otherwise. Not reliable for synchronization.
+                    </div>
+                </div>
+
+                <div class="method-box">
+                    <div class="method-signature">qsize()</div>
+                    <div class="definition">
+                        Return approximate size of queue. May not be reliable due to concurrent access.
+                    </div>
+                </div>
+
+                <div class="code-box">
+                    <div class="code-title">Example 1 - FIFO Queue (Task Distribution):</div>
+                    <pre>import queue
+import threading
+import time
+
+# Create FIFO queue
+task_queue = queue.Queue()
+
+def producer(name):
+    for i in range(5):
+        task = f"Task-{i}"
+        task_queue.put(task)
+        print(f"{name}: Added {task} to queue | Size: {task_queue.qsize()}")
+        time.sleep(0.3)
+
+def consumer(name):
+    while True:
+        try:
+            task = task_queue.get(timeout=2)
+            print(f"{name}: Processing {task}")
+            time.sleep(0.5)
+            task_queue.task_done()
+        except queue.Empty:
+            print(f"{name}: Queue empty, exiting")
+            break
+
+# Start threads
+p = threading.Thread(target=producer, args=("Producer",))
+c1 = threading.Thread(target=consumer, args=("Consumer-1",))
+c2 = threading.Thread(target=consumer, args=("Consumer-2",))
+
+p.start()
+c1.start()
+c2.start()
+
+p.join()
+c1.join()
+c2.join()</pre>
+                </div>
+
+                <div class="output-example">
+                    <div class="output-title">Output (FIFO Order):</div>
+                    <pre>Producer: Added Task-0 to queue | Size: 1
+Consumer-1: Processing Task-0
+Producer: Added Task-1 to queue | Size: 1
+Consumer-2: Processing Task-1
+Producer: Added Task-2 to queue | Size: 1
+Consumer-1: Processing Task-2
+Producer: Added Task-3 to queue | Size: 1
+Consumer-2: Processing Task-3
+Producer: Added Task-4 to queue | Size: 1
+Consumer-1: Processing Task-4</pre>
+                </div>
+
+                <div class="code-box">
+                    <div class="code-title">Example 2 - LIFO Queue (Stack Behavior):</div>
+                    <pre>import queue
+import threading
+
+# Create LIFO queue (Stack)
+stack_queue = queue.LifoQueue()
+
+# Add items
+for i in range(5):
+    stack_queue.put(f"Item-{i}")
+    print(f"Pushed: Item-{i}")
+
+print("\nPopping items (LIFO - Last In First Out):")
+
+# Remove items
+while not stack_queue.empty():
+    item = stack_queue.get()
+    print(f"Popped: {item}")</pre>
+                </div>
+
+                <div class="output-example">
+                    <div class="output-title">Output (LIFO Order):</div>
+                    <pre>Pushed: Item-0
+Pushed: Item-1
+Pushed: Item-2
+Pushed: Item-3
+Pushed: Item-4
+
+Popping items (LIFO - Last In First Out):
+Popped: Item-4  ← Last pushed, first popped
+Popped: Item-3
+Popped: Item-2
+Popped: Item-1
+Popped: Item-0  ← First pushed, last popped</pre>
+                </div>
+
+                <div class="code-box">
+                    <div class="code-title">Example 3 - Priority Queue (Task Prioritization):</div>
+                    <pre>import queue
+import threading
+
+# Create Priority queue
+pq = queue.PriorityQueue()
+
+# Add tasks with priorities (lower number = higher priority)
+pq.put((3, "Low priority task"))
+pq.put((1, "High priority task"))
+pq.put((2, "Medium priority task"))
+pq.put((1, "Another high priority task"))
+
+print("Processing tasks by priority:")
+
+while not pq.empty():
+    priority, task = pq.get()
+    print(f"Priority {priority}: {task}")</pre>
+                </div>
+
+                <div class="output-example">
+                    <div class="output-title">Output (Priority Order):</div>
+                    <pre>Processing tasks by priority:
+Priority 1: High priority task
+Priority 1: Another high priority task
+Priority 2: Medium priority task
+Priority 3: Low priority task</pre>
+                </div>
+
+                <div class="note">
+                    <div class="note-title">📌 Why Use Queue?</div>
+                    • Thread-safe (no need for manual locking)<br>
+                    • Built-in blocking/waiting behavior<br>
+                    • Handles synchronization automatically<br>
+                    • Cleaner code than manual Condition/Lock usage
+                </div>
+
+                <table>
+                    <tr>
+                        <th>Queue Type</th>
+                        <th>Order</th>
+                        <th>Use Case</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Queue</strong></td>
+                        <td>FIFO (First In, First Out)</td>
+                        <td>Task queues, job processing, message passing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LifoQueue</strong></td>
+                        <td>LIFO (Last In, First Out)</td>
+                        <td>Undo operations, backtracking, depth-first traversal</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PriorityQueue</strong></td>
+                        <td>Priority-based (Lowest first)</td>
+                        <td>Task scheduling, event handling, resource allocation</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 6: COMPREHENSIVE SUMMARY -->
+        <!-- ============================================ -->
+        <div class="section">
+            <div class="section-title">📊 6. Comprehensive Method Summary</div>
+
+            <table>
+                <tr>
+                    <th>Component</th>
+                    <th>Method/Property</th>
+                    <th>Description</th>
+                    <th>Example Name</th>
+                </tr>
+                <tr>
+                    <td rowspan="8"><strong>Thread Class</strong></td>
+                    <td>__init__()</td>
+                    <td>Create new thread object</td>
+                    <td>BasicThreadCreation</td>
+                </tr>
+                <tr>
+                    <td>start()</td>
+                    <td>Begin thread execution</td>
+                    <td>StartThreadExample</td>
+                </tr>
+                <tr>
+                    <td>run()</td>
+                    <td>Method executed by thread</td>
+                    <td>CustomRunMethod</td>
+                </tr>
+                <tr>
+                    <td>join()</td>
+                    <td>Wait for thread completion</td>
+                    <td>WaitForThreads</td>
+                </tr>
+                <tr>
+                    <td>getName() / name</td>
+                    <td>Get thread name</td>
+                    <td>ThreadIdentification</td>
+                </tr>
+                <tr>
+                    <td>setName() / name</td>
+                    <td>Set thread name</td>
+                    <td>ThreadNaming</td>
+                </tr>
+                <tr>
+                    <td>ident</td>
+                    <td>Thread ID (read-only)</td>
+                    <td>ThreadIDExample</td>
+                </tr>
+                <tr>
+                    <td>daemon / setDaemon()</td>
+                    <td>Daemon thread flag</td>
+                    <td>DaemonThreadDemo</td>
+                </tr>
+                <tr>
+                    <td rowspan="3"><strong>Global Functions</strong></td>
+                    <td>active_count()</td>
+                    <td>Count active threads</td>
+                    <td>ThreadCountExample</td>
+                </tr>
+                <tr>
+                    <td>enumerate()</td>
+                    <td>List all active threads</td>
+                    <td>ListAllThreads</td>
+                </tr>
+                <tr>
+                    <td>current_thread()</td>
+                    <td>Get current thread object</td>
+                    <td>IdentifyCurrentThread</td>
+                </tr>
+                <tr>
+                    <td rowspan="3"><strong>Lock</strong></td>
+                    <td>acquire()</td>
+                    <td>Acquire lock (blocking)</td>
+                    <td>BankAccountLock</td>
+                </tr>
+                <tr>
+                    <td>release()</td>
+                    <td>Release lock</td>
+                    <td>BankAccountLock</td>
+                </tr>
+                <tr>
+                    <td>locked()</td>
+                    <td>Check if locked</td>
+                    <td>LockStatusCheck</td>
+                </tr>
+                <tr>
+                    <td rowspan="2"><strong>RLock</strong></td>
+                    <td>acquire()</td>
+                    <td>Acquire lock (recursive)</td>
+                    <td>RecursiveFunctionLock</td>
+                </tr>
+                <tr>
+                    <td>release()</td>
+                    <td>Release lock (recursive)</td>
+                    <td>RecursiveFunctionLock</td>
+                </tr>
+                <tr>
+                    <td rowspan="2"><strong>Semaphore</strong></td>
+                    <td>acquire()</td>
+                    <td>Decrement counter</td>
+                    <td>ConnectionPoolSemaphore</td>
+                </tr>
+                <tr>
+                    <td>release()</td>
+                    <td>Increment counter</td>
+                    <td>ConnectionPoolSemaphore</td>
+                </tr>
+                <tr>
+                    <td rowspan="2"><strong>BoundedSemaphore</strong></td>
+                    <td>acquire()</td>
+                    <td>Decrement counter (bounded)</td>
+                    <td>ParkingLotBounded</td>
+                </tr>
+                <tr>
+                    <td>release()</td>
+                    <td>Increment counter (bounded)</td>
+                    <td>ParkingLotBounded</td>
+                </tr>
+                <tr>
+                    <td rowspan="4"><strong>Event</strong></td>
+                    <td>set()</td>
+                    <td>Set flag to True (GREEN)</td>
+                    <td>TrafficSignalEvent</td>
+                </tr>
+                <tr>
+                    <td>clear()</td>
+                    <td>Set flag to False (RED)</td>
+                    <td>TrafficSignalEvent</td>
+                </tr>
+                <tr>
+                    <td>wait()</td>
+                    <td>Block until flag is True</td>
+                    <td>TrafficSignalEvent</td>
+                </tr>
+                <tr>
+                    <td>is_set()</td>
+                    <td>Check flag status</td>
+                    <td>EventStatusCheck</td>
+                </tr>
+                <tr>
+                    <td rowspan="5"><strong>Condition</strong></td>
+                    <td>acquire()</td>
+                    <td>Acquire underlying lock</td>
+                    <td>ProducerConsumer</td>
+                </tr>
+                <tr>
+                    <td>release()</td>
+                    <td>Release underlying lock</td>
+                    <td>ProducerConsumer</td>
+                </tr>
+                <tr>
+                    <td>wait()</td>
+                    <td>Release lock and wait</td>
+                    <td>ProducerConsumer</td>
+                </tr>
+                <tr>
+                    <td>notify()</td>
+                    <td>Wake up one waiting thread</td>
+                    <td>ProducerConsumer</td>
+                </tr>
+                <tr>
+                    <td>notify_all()</td>
+                    <td>Wake up all waiting threads</td>
+                    <td>BroadcastNotification</td>
+                </tr>
+                <tr>
+                    <td rowspan="5"><strong>Queue</strong></td>
+                    <td>Queue()</td>
+                    <td>Create FIFO queue</td>
+                    <td>TaskQueueFIFO</td>
+                </tr>
+                <tr>
+                    <td>LifoQueue()</td>
+                    <td>Create LIFO queue (Stack)</td>
+                    <td>StackQueueLIFO</td>
+                </tr>
+                <tr>
+                    <td>PriorityQueue()</td>
+                    <td>Create priority queue</td>
+                    <td>PriorityTaskQueue</td>
+                </tr>
+                <tr>
+                    <td>put()</td>
+                    <td>Add item to queue</td>
+                    <td>TaskDistribution</td>
+                </tr>
+                <tr>
+                    <td>get()</td>
+                    <td>Remove item from queue</td>
+                    <td>TaskDistribution</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- SECTION 7: QUICK REFERENCE -->
+        <!-- ============================================ -->
+        <div class="section">
+            <div class="section-title">⚡ 7. Quick Reference Guide</div>
+
+            <div class="subsection-title">When to Use What:</div>
+
+            <table>
+                <tr>
+                    <th>Scenario</th>
+                    <th>Best Choice</th>
+                    <th>Why</th>
+                </tr>
+                <tr>
+                    <td>Simple mutual exclusion (one thread at a time)</td>
+                    <td><strong>Lock</strong></td>
+                    <td>Simplest synchronization primitive</td>
+                </tr>
+                <tr>
+                    <td>Recursive function calls need locking</td>
+                    <td><strong>RLock</strong></td>
+                    <td>Prevents self-deadlock in recursion</td>
+                </tr>
+                <tr>
+                    <td>Limited resource pool (N connections)</td>
+                    <td><strong>Semaphore</strong></td>
+                    <td>Controls concurrent access count</td>
+                </tr>
+                <tr>
+                    <td>Strict resource tracking (no over-release)</td>
+                    <td><strong>BoundedSemaphore</strong></td>
+                    <td>Prevents programming errors</td>
+                </tr>
+                <tr>
+                    <td>Simple on/off signal (go/stop)</td>
+                    <td><strong>Event</strong></td>
+                    <td>Easy binary signaling</td>
+                </tr>
+                <tr>
+                    <td>Producer-consumer pattern</td>
+                    <td><strong>Condition</strong> or <strong>Queue</strong></td>
+                    <td>Queue is simpler, Condition more flexible</td>
+                </tr>
+                <tr>
+                    <td>Task distribution among workers</td>
+                    <td><strong>Queue</strong></td>
+                    <td>Thread-safe, automatic blocking</td>
+                </tr>
+                <tr>
+                    <td>Priority-based task processing</td>
+                    <td><strong>PriorityQueue</strong></td>
+                    <td>Built-in priority handling</td>
+                </tr>
+            </table>
+
+            <div class="subsection-title">Common Pitfalls to Avoid:</div>
+
+            <div class="note">
+                <div class="note-title">⚠️ Deadlock Warning:</div>
+                • Always acquire locks in consistent order<br>
+                • Don't hold locks while waiting for other resources<br>
+                • Use timeout parameters to prevent indefinite blocking<br>
+                • RLock for recursive scenarios to avoid self-deadlock
+            </div>
+
+            <div class="note">
+                <div class="note-title">⚠️ Race Condition Warning:</div>
+                • Always protect shared data with synchronization<br>
+                • Don't trust empty() or qsize() for synchronization logic<br>
+                • Use lock's context manager (with lock:) to ensure release<br>
+                • Remember: multiple threads can interleave at any instruction
+            </div>
+
+            <div class="note">
+                <div class="note-title">⚠️ Daemon Thread Warning:</div>
+                • Daemon threads stop abruptly when main exits<br>
+                • Don't use for I/O operations (files may not close properly)<br>
+                • Use join() to ensure completion if needed<br>
+                • Cannot change daemon status after thread starts
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- FOOTER -->
+        <!-- ============================================ -->
+        <div style="text-align: center; margin-top: 50px; padding: 20px; background: #34495e; color: white; border-radius: 10px;">
+            <h2>🎓 Python Multithreading - Complete Reference</h2>
+            <p style="font-style: italic; margin-top: 10px;">
+                This comprehensive UML diagram covers all essential concepts, methods, and examples for mastering Python multithreading.
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>Remember:</strong> Threading is powerful but requires careful synchronization.<br>
+                Always test concurrent code thoroughly and watch for race conditions and deadlocks.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
